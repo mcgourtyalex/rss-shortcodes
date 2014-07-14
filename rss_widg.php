@@ -2,19 +2,25 @@
     .rss_content {
         padding: 10px;
         background: #EFEFEF;
-        text-overflow: ellipsis;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
     }
     
-    .rss_content:hover {
-        text-overflow: none;
-        overflow: visible;
-        -webkit-line-clamp: 10;
+    .rss_content:after {
+        content: " > more";
+        font-weight: bold;
     }
 
+    .rss_content:hover:after {
+        content: "";
+    }
+
+    .rss_content_ext {
+        display: none;
+    }
+    
+    .rss_content:hover > span {
+        display: inline;
+    }
+    
     td.rss_td {
         padding: 0px;
     }
@@ -31,6 +37,7 @@ function rss_embed_content($atts) {
     $atts = shortcode_atts( array(
         'href' => '#',
         'number' => 5,
+        'chars' => 250,
     ), $atts );
 
     $dom = new DOMDocument();
@@ -49,11 +56,13 @@ function rss_embed_content($atts) {
         $title = $item->getElementsByTagName('title')->item(0)->nodeValue;
         $link = $item->getElementsByTagName('link')->item(0)->nodeValue;
         $content = $item->getElementsByTagName('description')->item(0)->nodeValue;
-        $content_prev = substr($content,0,250).'...';
+        $content_prev = substr($content,0,$atts['chars']);
+        $content_end = substr($content,$atts['chars']);
         $date = $item->getElementsByTagName('pubDate')->item(0)->nodeValue;
         echo '<h5><a href="'.$link.'">'.$title.'</a></h5>';
         echo '</td></tr><tr><td class="rss_td">';
-        echo '<div class="rss_content">'.$content;
+        echo '<div class="rss_content">'.$content_prev;
+        echo '<span class="rss_content_ext">'.$content_end.'</span>';
         echo "<strong>"." ".$date."</strong><br /></div>";
         echo '</td></tr><tr><td style="border:none;">';
         echo '</td></tr>';
