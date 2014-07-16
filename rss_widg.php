@@ -55,7 +55,7 @@ function rss_embed_content($atts) {
         $rss_items = $rss->get_items(0,$atts['number']);
 
         // start table and config width -- 'full' for full width
-        echo '<table style="border:none;';
+        echo '<table style="border: none; margin: 0px; ';
         if ($atts['width'] != 'full') {
             echo 'max-width: '.$atts['width'].'px;';
         }
@@ -122,6 +122,7 @@ function rss_embed_content($atts) {
 
     $output_string = ob_get_contents();;
     ob_end_clean();
+
 
     return $output_string;
 
