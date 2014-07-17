@@ -102,14 +102,7 @@ add_shortcode( 'rss_embed', 'rss_embed_content' );
 function rss_embed_content($atts) {
 
     // attribute defaults
-    $atts = shortcode_atts( array(
-        'href' => '#',
-        'number' => 5,
-        'chars' => 250,
-        'max_chars' => 500,
-        'roll' => 'yes',
-        'width' => 500,
-    ), $atts );
+    $atts = defaults($atts);
 
     // fetch feed using WP
     $rss = fetch_feed($atts['href']);
@@ -181,20 +174,23 @@ function rss_embed_content($atts) {
                     echo $content_prev;
                     echo '<div class="ellipses"></div>';
                     echo '<span class="rss_content_ext';
-                    if ($total_len < $content_len) {
-                        echo ', ellipses_ext';
-                    }
+                    extension_ellipses_handler ($total_len, $content_len);
                     echo '">';
                     echo $content_end;
                     echo '</span>';
                 } else {
-                   echo '<div class="rss_content">'.$content_prev;
+                   echo '<div class="rss_content">';
+                   echo $content_prev;
                 }
 
                 // add date
-                echo "<br /><span class='date'>"." ".$date."</span>";
+                echo "<br /><span class='date'>"." ";
+                echo $date;
+                echo "</span>";
                 // add button link
-                echo "<a target='_blank' href='".$link."'><button class='more_button'>more</button></a><br /></div>";
+                echo "<a target='_blank' href='";
+                echo $link;
+                echo "'><button class='more_button'>more</button></a><br /></div>";
                 echo '</td></tr><tr><td class="gap_td"></td></tr>';
             }
 
@@ -202,11 +198,22 @@ function rss_embed_content($atts) {
         echo '</table>';
     }
 
+    // return buffer
     $output_string = ob_get_contents();;
     ob_end_clean();
-
     return $output_string;
 
+}
+
+function defaults($atts) {
+    return shortcode_atts( array(
+        'href' => '#',
+        'number' => 5,
+        'chars' => 250,
+        'max_chars' => 500,
+        'roll' => 'yes',
+        'width' => 500,
+    ), $atts );
 }
 
 function width_handler($width) {
@@ -245,6 +252,12 @@ function content_string_handler($content, $prev_len, $ext_len) {
 
 function activate_roll ($prev_len, $content_len, $roll, $ext_len) {
     return $prev_len != "full" && $prev_len < $content_len && $roll == 'yes' && $ext_len > 0;
+}
+
+function extension_ellipses_handler ($total_len, $content_len) {
+    if ($total_len < $content_len) {
+        echo ', ellipses_ext';
+    }
 }
 
 ?>
