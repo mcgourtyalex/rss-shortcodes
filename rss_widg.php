@@ -114,6 +114,8 @@ function rss_embed_content($atts) {
     // fetch feed using WP
     $rss = fetch_feed($atts['href']);
 
+    $roll = $atts['roll'];
+
     if (!is_wp_error($rss)) {
         // start a buffer so echo can be used
         ob_start();
@@ -121,19 +123,12 @@ function rss_embed_content($atts) {
 
         // get items
         $rss_items = $rss->get_items(0,$atts['number']);
+        
+        $width = $atts['width'];
 
         // start table and config width -- 'full' for full width
-        echo '<table class="tableau" style="border: none; margin: 0px; ';
-        $width = $atts['width'];
-        if ($width != 'full') {
-            if (strpos($width,'%')) {
-                echo 'max-width: '.$width.';';
-            } elseif (strpos($width,'px')) {
-                echo 'max-width: '.$width.';';
-            } else {
-                echo 'max-width: '.$width.'px;';
-            }
-        }
+        echo '<table style="border: none; margin: 0px; ';
+        width_handler($width);
         echo '">';
 
         // iterate over all items
@@ -143,39 +138,36 @@ function rss_embed_content($atts) {
             $title = $rss_item->get_title();
             $link = $rss_item->get_link();
             $date = $rss_item->get_date();
+            $content = $rss_item->get_description();
 
             // trim & strip content
-            $content = trim(strip_tags($rss_item->get_description()));
+            $content = content_trim($content);
             $content_len = strlen($content);
 
             // total_len is the total length of the prev and the ext together
             $total_len = $atts['max_chars'];
 
             // prev_len is the length of the preview text
-            $prev_len = $atts['chars'];
+            $prev_len = preview_length_handler($atts, $content_len);
 
             // ext_len is the length of the rest
             $ext_len = $total_len - $prev_len;
 
-            // if chars is set to full, make the preview the size of all of the content
-            if ($prev_len == 'full') {
-                $prev_len = $content_len;
-            }
+
             
             // create the preview and end substrings
             $content_prev = substr($content, 0, $prev_len);
-            $content_end = substr($content, $prev_len, $ext_len);
 
-            // if max_chars is full, then make the end the rest of the length
-            if ($total_len == 'full') {
-                $content_end = substr($content, $prev_len);
-            }
+            $content_end = content_string_handler($content, $prev_len, $ext_len);
 
             // start echoing to the embed with h5 title sizes, linked
             if ($title) {
                 echo '<tr><td class="title_td">';
-                echo '<h5><a href="'.$link.'">';
-                echo $title.'</a></h5>';
+                echo '<h5><a href="';
+                echo $link;
+                echo '">';
+                echo $title;
+                echo '</a></h5>';
                 echo '</td></tr>';
             }
 
@@ -184,13 +176,17 @@ function rss_embed_content($atts) {
                 echo '<tr><td class="rss_td">';
 
                 // test if there should be rolldown
-                if ($prev_len < $content_len && $atts['roll'] == 'yes' && $atts['chars'] != "full" && $ext_len > 0) {
-                    echo '<div class="rss_content_prev">'.$content_prev.'<div class="ellipses"></div>';
+                if (activate_roll ($prev_len, $content_len, $roll, $ext_len)) {
+                    echo '<div class="rss_content_prev">';
+                    echo $content_prev;
+                    echo '<div class="ellipses"></div>';
                     echo '<span class="rss_content_ext';
                     if ($total_len < $content_len) {
                         echo ', ellipses_ext';
                     }
-                    echo '">'.$content_end.'</span>';
+                    echo '">';
+                    echo $content_end;
+                    echo '</span>';
                 } else {
                    echo '<div class="rss_content">'.$content_prev;
                 }
@@ -214,8 +210,41 @@ function rss_embed_content($atts) {
 }
 
 function width_handler($width) {
-
+    if ($width != 'full') {
+        if (strpos($width,'%')) {
+            echo 'max-width: '.$width.';';
+        } elseif (strpos($width,'px')) {
+            echo 'max-width: '.$width.';';
+        } else {
+            echo 'max-width: '.$width.'px;';
+        }
+    }
 }
 
+function content_trim($content) {
+    return trim(strip_tags($content));
+}
+
+function preview_length_handler($atts, $content_len) {
+    $prev_len = $atts['chars'];
+    // if chars is set to full, make the preview the size of all of the content
+    if ($prev_len == 'full') {
+        $prev_len = $content_len;
+    }
+    return $prev_len;
+}
+
+function content_string_handler($content, $prev_len, $ext_len) {
+    $content_end = substr($content, $prev_len, $ext_len);
+    // if max_chars is full, then make the end the rest of the length
+    if ($total_len == 'full') {
+        $content_end = substr($content, $prev_len);
+    }
+    return $content_end;
+}
+
+function activate_roll ($prev_len, $content_len, $roll, $ext_len) {
+    return $prev_len != "full" && $prev_len < $content_len && $roll == 'yes' && $ext_len > 0;
+}
 
 ?>
