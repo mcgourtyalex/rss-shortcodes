@@ -52,8 +52,6 @@
     }
     td.title_td {
         padding: 10px;
-        padding-bottom: 0px; 
-        padding-top: 0px;
         border-bottom: none;
         box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
     }
@@ -63,6 +61,19 @@
     span.date {
         color: #999999;
     }
+    
+    div.author {
+        color: #999999;
+        display: inline;
+        float: right;
+    }
+    
+    a.author_link {
+        color: #999999;
+        text-decoration: none;
+        text-decoration-color: none;
+    }
+    
     .more_button {
         color: #FFF;
         background-color: #4675AB;
@@ -91,6 +102,12 @@
     .rss_content:hover > a > .more_button {
         display: inline;
     }
+
+    a.item_title {
+        font-size: 16px;
+        font-weight: bold;
+    }
+    
 </style>
 <?php
 /*
@@ -108,16 +125,23 @@ function rss_embed_content($atts) {
     $rss = fetch_feed($atts['href']);
 
     $roll = $atts['roll'];
+    $width = $atts['width'];
+    // total_len is the total length of the prev and the ext together
+    $total_len = $atts['max_chars'];
+    // prev_len is the length of the preview text
+    $prev_len = preview_length_handler($atts, $content_len);
+    // ext_len is the length of the rest
+    $ext_len = $total_len - $prev_len;
 
     if (!is_wp_error($rss)) {
         // start a buffer so echo can be used
         ob_start();
+
         echo '<br />';
 
         // get items
         $rss_items = $rss->get_items(0,$atts['number']);
         
-        $width = $atts['width'];
 
         // start table and config width -- 'full' for full width
         echo '<table style="border: none; margin: 0px; ';
@@ -131,36 +155,40 @@ function rss_embed_content($atts) {
             $title = $rss_item->get_title();
             $link = $rss_item->get_link();
             $date = $rss_item->get_date();
-            $content = $rss_item->get_description();
-
+            $author = $rss_item->get_author()->get_name();
+            $author_link = $rss_item->get_author()->get_link();
+            $category = $rss_item->get_category();
             // trim & strip content
+            $content = $rss_item->get_description();
             $content = content_trim($content);
             $content_len = strlen($content);
 
-            // total_len is the total length of the prev and the ext together
-            $total_len = $atts['max_chars'];
-
-            // prev_len is the length of the preview text
-            $prev_len = preview_length_handler($atts, $content_len);
-
-            // ext_len is the length of the rest
-            $ext_len = $total_len - $prev_len;
-
-
-            
             // create the preview and end substrings
-            $content_prev = substr($content, 0, $prev_len);
-
-            $content_end = content_string_handler($content, $prev_len, $ext_len);
+            $content_prev = content_prev_string_handler($content, $prev_len);
+            $content_end = content_end_string_handler($content, $prev_len, $ext_len);
 
             // start echoing to the embed with h5 title sizes, linked
             if ($title) {
                 echo '<tr><td class="title_td">';
-                echo '<h5><a href="';
+                echo '<a href="';
                 echo $link;
-                echo '">';
+                echo '" class="item_title">';
                 echo $title;
-                echo '</a></h5>';
+                echo '</a>';
+                echo '<div class="author">';
+                echo '<a class="author_link" ';
+                if ($author_link) {
+                    echo 'href='.$author_link;
+                }
+                echo '>';
+                echo $author;
+                echo '</a>';
+                if ($category) {
+                    echo " | ";
+                    echo $category;
+                }
+                echo '</div>';
+                echo '';
                 echo '</td></tr>';
             }
 
@@ -191,7 +219,9 @@ function rss_embed_content($atts) {
                 echo "<a target='_blank' href='";
                 echo $link;
                 echo "'><button class='more_button'>more</button></a><br /></div>";
-                echo '</td></tr><tr><td class="gap_td"></td></tr>';
+                echo '</td></tr>';
+                // create gap between posts
+                echo '<tr><td class="gap_td"></td></tr>';
             }
 
         }
@@ -205,6 +235,7 @@ function rss_embed_content($atts) {
 
 }
 
+// sets attributes to parameters or defaults if undeclared
 function defaults($atts) {
     return shortcode_atts( array(
         'href' => '#',
@@ -216,6 +247,7 @@ function defaults($atts) {
     ), $atts );
 }
 
+// handles options of width input
 function width_handler($width) {
     if ($width != 'full') {
         if (strpos($width,'%')) {
@@ -228,10 +260,12 @@ function width_handler($width) {
     }
 }
 
+// trim description text html
 function content_trim($content) {
     return trim(strip_tags($content));
 }
 
+//sets length of preview
 function preview_length_handler($atts, $content_len) {
     $prev_len = $atts['chars'];
     // if chars is set to full, make the preview the size of all of the content
@@ -241,7 +275,8 @@ function preview_length_handler($atts, $content_len) {
     return $prev_len;
 }
 
-function content_string_handler($content, $prev_len, $ext_len) {
+// creates content string to proper size
+function content_end_string_handler($content, $prev_len, $ext_len) {
     $content_end = substr($content, $prev_len, $ext_len);
     // if max_chars is full, then make the end the rest of the length
     if ($total_len == 'full') {
@@ -250,10 +285,16 @@ function content_string_handler($content, $prev_len, $ext_len) {
     return $content_end;
 }
 
+function content_prev_string_handler($content, $prev_len) {
+    return substr($content, 0, $prev_len);
+}
+
+// activates rolldown if true
 function activate_roll ($prev_len, $content_len, $roll, $ext_len) {
     return $prev_len != "full" && $prev_len < $content_len && $roll == 'yes' && $ext_len > 0;
 }
 
+// adds the ellipses class if true
 function extension_ellipses_handler ($total_len, $content_len) {
     if ($total_len < $content_len) {
         echo ', ellipses_ext';
