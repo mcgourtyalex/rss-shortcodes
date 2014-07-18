@@ -1,2 +1,231 @@
-body {
+/* 
+Theme Name: EHP Responsive Theme
+Theme URI: http://themeid.com/responsive-theme/
+Description: EHP Responsive Theme
+
+Template: responsive
+Version: 1.0.0
+Author: Toki Migimatsu 
+Author URI: http://themeid.com
+Tags: white, black, gray, light, custom-menu, custom-header, custom-background, one-column, two-columns, left-sidebar, right-sidebar, flexible-width, theme-options, threaded-comments, full-width-template, sticky-post, translation-ready, flexible-width, rtl-language-support
+
+License: GNU General Public License
+License URI: license.txt 
+
+Responsive WordPress Theme, Copyright (C) 2003-2012 Emil Uzelac 
+
+*/
+
+/* =Import Styles
+-------------------------------------------------------------- */
+@import url('../responsive/style.css');
+
+/* =Start From Here
+-------------------------------------------------------------- */
+
+#container {
+	max-width: none;
 }
+
+#u141 {
+	float: left;
+	margin-right: 10px;
+}
+
+#pu126-4 {
+	*min-width: 100%; /* IE 7 */
+}
+
+#pu126-4:hover {
+	background-color: #efefef;
+}
+
+.useful-link img {
+	float: left;
+	margin-right: .8em;
+	*display: inline;
+	*zoom: 1;
+}
+/*
+.ie7 img {
+	height: auto;
+	width: auto\9;
+}
+*/
+/*
+.ie7 div , .ie8 div , .ie9 div , .ie10 div {
+
+margin: 5em;
+padding: 4em;
+border: 1em solid green;
+width: 40em
+}
+*/
+
+/*
+html>body div {
+width: 30em
+
+}
+*/
+.useful-link h6 {
+	margin: 0 0 1em 0;
+}
+
+.links > div {
+	float: none !important;
+	*float: left !important; /* IE 7 */
+	display: inline-block;
+	vertical-align: top;
+	margin-bottom: 20px !important;
+}
+
+.widgets-wrapper {
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	background-color: #f9f9f9;
+	border: 1px solid #e5e5e5;
+	border-radius: 4px;
+	padding: 0 20px 20px;
+}
+
+.widgets-wrapper .widget-wrapper {
+	border: none;
+	margin-bottom: 0;
+	width: 33.333333333333%;
+	float: left;
+	background: none;
+	padding: 0;
+}
+
+.front-page #widgets {
+	margin-top: 0 !important;
+	margin-bottom: 20px !important;
+}
+
+.screen-reader-text {
+	display: none;
+}
+
+#widgets ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+#respond {
+	background-color: #f9f9f9;
+	background-image: none;
+	border: 1px solid #e5e5e5 !important;
+}
+
+@media screen and (max-width: 720px) {
+	.widgets-wrapper .widget-wrapper {
+		width: 100%;
+	}
+}
+@media screen and (max-width: 1024px) {
+	.grid, .grid-right {
+		display: block;
+		width: 100%;
+		float: left;
+	}
+}
+@media screen and (min-width: 720px) {
+	.widgets-wrapper .widget-wrapper > div {
+		margin-right: 10px !important;
+	}
+}
+@media screen and (min-width: 650px) {
+	.main-nav .menu-parent:after {
+		content: ' ';
+		height: 0;
+		width: 0;
+		border: 5px solid transparent;
+		border-left-color: #777;
+		position: absolute;
+		right: 0;
+		top: 10px;
+	}
+	.main-nav .menu-parent:hover:after {
+		border-left-color: #aaa;
+	}
+	.sub-menu {
+		-webkit-box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.1);
+		box-shadow: 0px 2px 4px 0px rgba(0,0,0,0.1);
+	}
+	.menu li li:last-child {
+		margin-bottom: 0;
+	}
+}
+
+    .rss_content {
+        padding: 10px;
+        background: #F3F3F3;
+    }
+    .rss_content_long {
+        padding: 10px;
+        background: #F3F3F3;
+    }
+    .rss_content_long:after {
+        content: "\25BC";
+        color: #4675AB;
+        margin: 0 auto;
+    }
+    .rss_content_long:hover:after {
+        content: "";
+    }
+    .rss_content_ext {
+        display: none;
+    }
+    .rss_content_long:hover > span {
+        display: inline;
+    }
+    td.rss_td {
+        padding: 0px;
+        border-top: none;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    }
+    td.title_td {
+        padding: 10px;
+        padding-bottom: 0px; 
+        padding-top: 0px;
+        border-bottom: none;
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    }
+    td.gap_td {
+        border:none;
+    }
+    span.date {
+        color: #999999;
+    }
+    .more_button {
+        color: #FFF;
+        background-color: #4675AB;
+        border: 1px solid #3868B6;
+        -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+        -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+        margin: 0px;
+        margin-right: 10px;
+        text-align: center;
+        text-transform: capitalize;
+        padding-left: 14px;
+        padding-right: 14px;
+        border-radius: 3px;
+        box-sizing: content-box;
+        position: relative;
+        float: right;
+        display: none;
+        cursor: pointer;
+    }
+    
+    .rss_content_long:hover > a > .more_button {
+        display: inline;
+    }
+    
+    .rss_content:hover > a > .more_button {
+        display: inline;
+    }
+
+/*The last 29 days of the month are the hardest."- Nikola Tesla*/

@@ -1,112 +1,125 @@
+<!DOCTYPE html>
+
 <style>
-    .rss_content {
-        padding: 10px;
-        background: #F3F3F3;
-    }
-    .rss_content_prev {
-        padding: 10px;
-        background: #F3F3F3;
-    }
-    .rss_content_prev:after {
-        content: "\25BC";
-        color: #4675AB;
-        display: block;
-        margin: 0 auto;
-        position: relative;
-        text-align: center;
-    }
-    .rss_content_prev:hover:after {
-        content: "";
-    }
-    .rss_content_ext {
-        display: none;
-    }
+.rss_content {
+    padding: 10px;
+    background: #F3F3F3;
+}
+.rss_content_long {
+    padding: 10px;
+    background: #F3F3F3;
+}
+.rss_content_long:after {
+    content: "\25BC";
+    color: #4675AB;
+    display: block;
+    margin: 0 auto;
+    position: relative;
+    text-align: center;
+}
 
-    .ellipses {
-        display: inline;
-    }
-    
-    .rss_content_prev:hover > .ellipses:after {
-        content: "";
-    }
+.rss_content_long:hover:after {
+    content: "";
+}
+.rss_content_ext {
+    display: none;
+}
 
-    .ellipses:after {
-        content: "..."
-    }
+.ellipses {
+    display: inline;
+}
     
-    .ellipses_ext {
-        display: none;
-    }
-    
-    .ellipses_ext:after {
-        content: "...";
-    }
-    
-    .rss_content_prev:hover > span {
-        display: inline;
-    }
-    td.rss_td {
-        padding: 0px;
-        border-top: none;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
-    }
-    td.title_td {
-        padding: 10px;
-        border-bottom: none;
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
-    }
-    td.gap_td {
-        border:none;
-    }
-    span.date {
-        color: #999999;
-    }
-    
-    div.author {
-        color: #999999;
-        display: inline;
-        float: right;
-    }
-    
-    a.author_link {
-        color: #999999;
-        text-decoration: none;
-        text-decoration-color: none;
-    }
-    
-    .more_button {
-        color: #FFF;
-        background-color: #4675AB;
-        border: 1px solid #3868B6;
-        -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
-        -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
-        box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
-        margin: 0px;
-        margin-right: 10px;
-        text-align: center;
-        text-transform: capitalize;
-        padding-left: 14px;
-        padding-right: 14px;
-        border-radius: 3px;
-        box-sizing: content-box;
-        position: relative;
-        float: right;
-        display: none;
-        cursor: pointer;
-    }
-    
-    .rss_content_prev:hover > a > .more_button {
-        display: inline;
-    }
-    
-    .rss_content:hover > a > .more_button {
-        display: inline;
-    }
+.rss_content_long:hover > .ellipses:after {
+    content: "";
+}
 
-    a.item_title {
-        font-size: 16px;
-        font-weight: bold;
-    }
+.ellipses:after {
+    content: "...";
+}
+    
+.ellipses_ext {
+    display: none;
+}
+    
+.ellipses_ext:after {
+    content: "...";
+}
+    
+.rss_content_long:hover > span {
+    display: inline;
+}
+td.rss_td {
+    padding: 0px;
+    border-top: none;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    background: #F3F3F3;
+}
+td.title_td {
+    padding: 10px;
+    border-bottom: none;
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.3);
+}
+td.gap_td {
+    border:none;
+    height: 10px;
+    border-top: 1px solid #dddddd;
+}
+span.date {
+    color: #999999;
+}
+    
+div.author {
+    color: #999999;
+    display: inline;
+    float: right;
+}
+    
+a.author_link {
+    color: #999999;
+    text-decoration: none;
+    text-decoration-color: none;
+}
+    
+.more_button {
+    color: #FFF;
+    background-color: #4675AB;
+    border: 1px solid #3868B6;
+    -webkit-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+    -moz-box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+    box-shadow: 0 1px 2px 0 rgba(0,0,0,0.25);
+    margin: 0px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    text-transform: capitalize;
+    padding-left: 14px;
+    padding-right: 14px;
+    border-radius: 3px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    box-sizing: content-box;
+    position: relative;
+    float: right;
+    display: none;
+    cursor: pointer;
+}
+    
+.rss_content_long:hover > a > .more_button {
+    display: inline;
+}
+    
+.rss_content:hover > a > .more_button {
+    display: inline;
+}
+
+a.item_title {
+    font-size: 16px;
+    font-weight: bold;
+}
     
 </style>
 <?php
@@ -198,7 +211,7 @@ function rss_embed_content($atts) {
 
                 // test if there should be rolldown
                 if (activate_roll ($prev_len, $content_len, $roll, $ext_len)) {
-                    echo '<div class="rss_content_prev">';
+                    echo '<div class="rss_content_long">';
                     echo $content_prev;
                     echo '<div class="ellipses"></div>';
                     echo '<span class="rss_content_ext';
@@ -220,8 +233,10 @@ function rss_embed_content($atts) {
                 echo $link;
                 echo "'><button class='more_button'>more</button></a><br /></div>";
                 echo '</td></tr>';
+            }
+            if ($title || $content) {
                 // create gap between posts
-                echo '<tr><td class="gap_td"></td></tr>';
+                echo '<tr><td class="gap_td"> </td></tr>';
             }
 
         }
