@@ -8,6 +8,7 @@
 .rss_content_long {
     padding: 10px;
     background: #F3F3F3;
+    
 }
 .rss_content_long:after {
     content: "\25BC";
@@ -119,6 +120,26 @@ a.author_link {
 a.item_title {
     font-size: 16px;
     font-weight: bold;
+    margin-left: 10px;
+}
+
+div.circle_fun {
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    border: 1px solid #999999;
+    float: left;
+    transition: all 0.4s ease-in-out;
+    background: #F3F3F3;
+}
+    
+a.item_title:hover > div.circle_fun {
+    width: 10px;
+    height: 10px;
+    border-radius: 10px;
+    border-bottom-right-radius: 0px;
+    float: left;
+    background: #F3F3F3;
 }
     
 </style>
@@ -166,6 +187,7 @@ function rss_embed_content($atts) {
 
             // vars
             $title = $rss_item->get_title();
+            $title = title_trim($title);
             $link = $rss_item->get_link();
             $date = $rss_item->get_date();
             $author = $rss_item->get_author()->get_name();
@@ -181,12 +203,13 @@ function rss_embed_content($atts) {
             $content_end = content_end_string_handler($content, $prev_len, $ext_len);
 
             // start echoing to the embed with h5 title sizes, linked
-            if ($title) {
+            if ($title && $content) {
                 echo '<tr><td class="title_td">';
                 echo '<a href="';
                 echo $link;
                 echo '" class="item_title">';
-                echo $title;
+                echo '<div class="circle_fun"></div>';
+                echo strip_tags($title);
                 echo '</a>';
                 echo '<div class="author">';
                 echo '<a class="author_link" ';
@@ -203,10 +226,7 @@ function rss_embed_content($atts) {
                 echo '</div>';
                 echo '';
                 echo '</td></tr>';
-            }
 
-            // display content
-            if ($content) {
                 echo '<tr><td class="rss_td">';
 
                 // test if there should be rolldown
@@ -233,8 +253,6 @@ function rss_embed_content($atts) {
                 echo $link;
                 echo "'><button class='more_button'>more</button></a><br /></div>";
                 echo '</td></tr>';
-            }
-            if ($title || $content) {
                 // create gap between posts
                 echo '<tr><td class="gap_td"> </td></tr>';
             }
@@ -314,6 +332,10 @@ function extension_ellipses_handler ($total_len, $content_len) {
     if ($total_len < $content_len) {
         echo ', ellipses_ext';
     }
+}
+
+function title_trim ($title) {
+    return trim(strip_tags($title));
 }
 
 ?>
